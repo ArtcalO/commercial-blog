@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
+from django.shortcuts import render
 from .forms import *
-from .models import *
+from .models import Films, Avis, Commentaires, Achats
 from django.db.models import Q
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
@@ -55,10 +56,8 @@ def deconnexion_view(request):
 def acceuil_app(request):
     acceuil = "Page d'acceuil"
     film_obj = Films.objects.all().order_by('date')
-    slide1=film_obj[0]
-    # film_obj=film_obj[1:3]
     page = request.GET.get('page', 1)          # page à charger par defaut
-    paginator = Paginator(film_obj, 2)         # limiter tous les elements à afficher
+    paginator = Paginator(film_obj, 8)         # limiter tous les elements à afficher
 
     try:
         filmsPage = paginator.page(page)
@@ -82,9 +81,7 @@ def acceuil_app(request):
             film = form_view_film.cleaned_data['film']
             prix = form_view_film.cleaned_data['prix_telechargement']
 
-            Films(user = currentuser,titre = titre,acteur = acteur,description = description,\
-                    language = language,resolution = resolution,cover = cover,film = film,\
-                    prix_telechargement = prix ).save()
+            Films(user = currentuser,titre = titre,acteur = acteur,description = description,language = language,resolution = resolution,cover = cover,film = film,prix_telechargement = prix ).save()
             nombre_film = Films.objects.all().count()
             msg = "Enregistrer avec success !!!"
 
